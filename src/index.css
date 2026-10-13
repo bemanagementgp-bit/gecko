@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* Tokens del manual de marca gecko: 1 color principal (Naranja) + 3 de soporte, tipografía única */
+@theme {
+  --color-naranja: #F15A24;
+  --color-negro: #1A1A1A;
+  --color-gris: #D9D9D9;
+  --color-blanco: #FFFFFF;
+  --color-papel: #F4F3F1;
+  --color-tinta2: #5E5751;
+  --color-linea: #E3DFDB;
+  --color-hondo: #B8401A;
+  --color-humo: #BDB6B0;
+  --color-carbon: #262626;
+  --color-cafe: #3A1405;
+  --font-sans: "Darker Grotesque", ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --ease-gecko: cubic-bezier(.2, .8, .2, 1);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  body {
+    @apply bg-blanco text-negro font-sans antialiased;
+    font-size: clamp(18px, 1.05vw + 12px, 21px);
+    font-weight: 500;
+    line-height: 1.42;
+  }
+  h1, h2, h3, h4 { font-weight: 800; line-height: .95; letter-spacing: -.01em; text-wrap: balance; }
+  :focus-visible { outline: 3px solid var(--color-naranja); outline-offset: 3px; }
+  ::selection { background: var(--color-naranja); color: var(--color-negro); }
+  input, select, textarea, button { font: inherit; }
+}
+
+/* Frame del manual: esquinas superior izquierda e inferior derecha cortadas */
+@utility frame {
+  --chaflan: 22px;
+  clip-path: polygon(var(--chaflan) 0, 100% 0, 100% calc(100% - var(--chaflan)), calc(100% - var(--chaflan)) 100%, 0 100%, 0 var(--chaflan));
+}
+@utility eyebrow { font-weight: 800; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; }
+@utility wrap { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: clamp(16px, 3vw, 32px); }
+@utility tag { display: inline-block; font-size: 15px; font-weight: 700; padding: 1px 10px 3px; border-radius: 999px; white-space: nowrap; }
+@utility display { font-size: clamp(52px, 9vw, 132px); font-weight: 900; line-height: .92; }
+@utility h-section { font-size: clamp(40px, 5.4vw, 72px); }
+@utility lead { font-size: clamp(21px, 2.1vw, 27px); font-weight: 600; line-height: 1.28; }
+
+/* Campos de formulario */
+@utility field {
+  width: 100%; background: var(--color-blanco); border: 1.5px solid var(--color-negro); padding: 10px 14px 12px; font-size: 19px; font-weight: 600; border-radius: 0;
+  &:focus { outline: none; border-color: var(--color-naranja); box-shadow: 0 0 0 2px var(--color-naranja); }
+}
+
+.split-line { padding-bottom: .08em; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
