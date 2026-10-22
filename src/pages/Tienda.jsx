@@ -11,6 +11,7 @@ import { Button, SectionHead } from '../components/ui'
 import { Truchet } from '../components/Patterns'
 import { Faq } from '../components/blocks'
 import ProductCard from '../components/shop/ProductCard'
+import PageHero, { HeroChip } from '../components/PageHero'
 
 const sorts = [
   ['destacados', 'Destacados'],
@@ -36,7 +37,7 @@ function Chip({ on, onClick, children, count }) {
 }
 
 export default function Tienda() {
-  const { products, categories } = usePublic()
+  const { products, categories, projects } = usePublic()
   const root = useRef(null)
   const grid = useRef(null)
   const flip = useRef(null)
@@ -78,20 +79,14 @@ export default function Tienda() {
       <title>Tienda · gecko</title>
       <meta name="description" content="Stickers, vinilos, señalética, acrílico y MDF cortado a medida y exhibidores. Comprá online y retirá en el taller o recibilo en tu casa." />
 
-      <section className="relative overflow-hidden bg-negro text-blanco">
-        <div className="absolute inset-y-0 right-0 w-full opacity-35 [mask-image:linear-gradient(90deg,transparent_30%,#000)] md:w-2/3"><Truchet combo="negro" size={28} /></div>
-        <div className="wrap relative grid gap-5 py-[clamp(56px,8vw,110px)]">
-          <p className="eyebrow text-naranja">Tienda online</p>
-          <h1 data-split className="display max-w-[12ch]">Pedilo online, lo hacemos en el taller.</h1>
-          <p data-reveal className="lead max-w-[44ch] text-humo">Los mismos productos que ves en nuestras obras: estándar con precio a la vista y piezas a medida para cotizar.</p>
-          <div data-reveal className="flex flex-wrap gap-2">
-            {categories.map((c) => (
-              <button key={c.slug} type="button" onClick={() => { setParam('categoria', c.slug, false); document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' }) }}
-                className="rounded-full border-[1.5px] border-[#555] px-4 pb-2 pt-1 text-[17px] font-bold hover:border-naranja hover:text-naranja">{c.name}</button>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PageHero eyebrow="Tienda online" title="Pedilo online, lo hacemos en el taller."
+        lead="Los mismos productos que ves en nuestras obras: estándar con precio a la vista y piezas a medida para cotizar."
+        media={{ type: 'stack', products: [...products].sort((a, b) => (a.featured || 99) - (b.featured || 99)) }}
+        stats={[[products.length, 'Productos'], [products.filter((p) => !isQuote(p)).length, 'Con precio online'], [products.filter(isQuote).length, 'A medida'], [projects.filter((x) => x.products?.length).length, 'Obras con estos productos']]}>
+        {categories.map((c) => (
+          <HeroChip key={c.slug} onClick={() => { setParam('categoria', c.slug, false); document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' }) }}>{c.name}</HeroChip>
+        ))}
+      </PageHero>
 
       <div className="border-b border-linea bg-papel">
         <div data-reveal="stagger" className="wrap grid gap-4 py-5 text-[17px] font-bold sm:grid-cols-2 lg:grid-cols-4">

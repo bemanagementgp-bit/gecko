@@ -11,6 +11,7 @@ import ProductCard from '../components/shop/ProductCard'
 import { Button, Photo, Placeholder, SectionHead } from '../components/ui'
 import { Waves, Truchet } from '../components/Patterns'
 import { ProjectCard, ProcessSteps, CtaBand, Faq } from '../components/blocks'
+import PageHero, { HeroChip } from '../components/PageHero'
 
 // Fondo del encabezado según el pattern asignado a cada unidad.
 function HeroBg({ pattern }) {
@@ -18,6 +19,9 @@ function HeroBg({ pattern }) {
   if (pattern === 'truchet') return <div className="absolute inset-0 opacity-25"><Truchet combo="blanco" size={34} /></div>
   return <div className="frame absolute inset-[clamp(12px,2vw,24px)] border-2 border-white/40 [--chaflan:48px]" />
 }
+
+// Video de fondo del hero de cada unidad.
+const heroVideo = { arquigrafia: '/media/p/farmacia-garcia/noche', 'produccion-grafica': '/media/taller/uv', 'pop-retail': '/media/p/creperie-on-the-road/impresion' }
 
 // Categorías de la tienda relacionadas con cada unidad.
 const shopCats = { 'produccion-grafica': ['vinilos', 'cortes', 'vehicular'], arquigrafia: ['corporeos', 'fachadas'], 'pop-retail': ['vinilos', 'corporeos'] }
@@ -30,12 +34,6 @@ export default function Servicio({ slug }) {
   useGSAP(() => {
     const mm = gsap.matchMedia()
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const tl = gsap.timeline({ delay: 0.75 })
-      SplitText.create('[data-hero-title]', {
-        type: 'lines', mask: 'lines', autoSplit: true,
-        onSplit: (self) => tl.from(self.lines, { yPercent: 110, stagger: 0.1, duration: 1, ease: 'power4.out' }, 0),
-      })
-      tl.from('[data-hero-fade]', { y: 24, opacity: 0, stagger: 0.08, duration: 0.7 }, 0.3)
       gsap.from('[data-item]', { y: 50, opacity: 0, '--chaflan': '50px', stagger: 0.1, duration: 0.9, scrollTrigger: { trigger: '[data-items]', start: 'top 80%', once: true } })
     })
   }, { scope: root, dependencies: [slug], revertOnUpdate: true })
@@ -51,19 +49,12 @@ export default function Servicio({ slug }) {
       <title>{`${s.name} · gecko`}</title>
       <meta name="description" content={s.intro} />
 
-      <section className="relative overflow-hidden bg-naranja text-blanco">
-        <HeroBg pattern={s.pattern} />
-        <div className="wrap relative grid gap-6 py-[clamp(64px,9vw,130px)]">
-          <nav data-hero-fade aria-label="Ruta" className="text-[16px] font-bold text-cafe"><Link to="/" className="hover:underline">Inicio</Link> / Servicios</nav>
-          <p data-hero-fade className="eyebrow">{s.name}</p>
-          <h1 data-hero-title className="display max-w-[13ch]">{s.headline}</h1>
-          <p data-hero-fade className="lead max-w-[44ch]">{s.intro}</p>
-          <div data-hero-fade className="flex flex-wrap gap-3">
-            <Button to={s.landing || '/contacto'} tone="dark" size="lg">{s.landing ? 'Contanos tu proyecto' : 'Pedí tu cotización'}</Button>
-            {s.shop && <Button to="/tienda" tone="ghost" size="lg">Comprar online</Button>}
-          </div>
-        </div>
-      </section>
+      <PageHero key={slug} eyebrow={s.name} title={s.headline} lead={s.intro} media={{ type: 'video', src: heroVideo[slug] }}
+        crumbs={<><Link to="/" className="hover:text-naranja">Inicio</Link> / Servicios</>}
+        stats={[[related.length, 'Obras de esta unidad'], [used.length, 'Productos de sus obras'], [s.items.length, 'Servicios'], [s.steps.length, 'Pasos del proceso']]}>
+        <HeroChip solid to={s.landing || '/contacto'}>{s.landing ? 'Contanos tu proyecto' : 'Pedí tu cotización'}</HeroChip>
+        {s.shop && <HeroChip to="/tienda">Comprar online</HeroChip>}
+      </PageHero>
 
       <section className="bg-blanco py-[clamp(64px,9vw,120px)]">
         <div className="wrap grid gap-10">

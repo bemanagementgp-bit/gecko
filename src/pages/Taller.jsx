@@ -9,6 +9,7 @@ import { CtaBand, Stat } from '../components/blocks'
 import { usePublic } from '../lib/content'
 import { VideoLoop, Reels } from '../components/Video'
 import Img from '../components/Img'
+import PageHero, { HeroChip } from '../components/PageHero'
 
 // Socios de gecko, con su retrato (public/media/equipo).
 const equipo = [
@@ -68,14 +69,13 @@ export default function Taller() {
       <title>El taller · gecko</title>
       <meta name="description" content="gecko nace de la fusión de INOVO Industrial y ERRE Comunicación Visual. Diseño industrial y gráfico con taller propio en La Plata." />
 
-      <section className="relative overflow-hidden bg-naranja text-blanco">
-        <Waves walker="rgba(255,255,255,.5)" />
-        <div className="wrap relative grid gap-6 py-[clamp(64px,9vw,130px)]">
-          <p className="eyebrow">El taller y el equipo</p>
-          <h1 data-split className="display max-w-[12ch]">Dos marcas, una sola huella.</h1>
-          <p data-reveal className="lead max-w-[46ch]">Somos la fusión de INOVO Industrial y ERRE Comunicación Visual. Diseñadores industriales y gráficos de la UNLP que decidimos unir el estudio y el taller.</p>
-        </div>
-      </section>
+      <PageHero eyebrow="El taller y el equipo" title="Dos marcas, una sola huella."
+        lead="Somos la fusión de INOVO Industrial y ERRE Comunicación Visual. Diseñadores industriales y gráficos de la UNLP que decidimos unir el estudio y el taller."
+        media={{ type: 'video', src: '/media/taller/cnc' }}
+        stats={[[10, 'Años de oficio', '+'], [2, 'Marcas fusionadas'], [3, 'Unidades de servicio'], [100, 'Producción in-house', '%']]}>
+        <HeroChip solid to="/contacto">Coordinar una visita</HeroChip>
+        <HeroChip to="/proyectos">Ver proyectos</HeroChip>
+      </PageHero>
 
       <section className="bg-blanco py-[clamp(64px,9vw,120px)]">
         <div className="wrap grid gap-10">

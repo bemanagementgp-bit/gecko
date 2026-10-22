@@ -8,6 +8,7 @@ import { Button, SectionHead } from '../components/ui'
 import { Waves } from '../components/Patterns'
 import { Faq } from '../components/blocks'
 import LeadForm from '../components/LeadForm'
+import PageHero, { HeroChip } from '../components/PageHero'
 
 export default function Contacto() {
   const root = useRef(null)
@@ -22,16 +23,14 @@ export default function Contacto() {
       <title>Contacto · gecko</title>
       <meta name="description" content="Contanos tu proyecto: fachadas, cartelería, P.O.P., stands o producción gráfica. gecko, La Plata." />
 
-      <section className="relative overflow-hidden bg-naranja text-blanco">
-        <Waves />
-        <div className="wrap relative grid gap-5 py-[clamp(56px,8vw,110px)]">
-          <p className="eyebrow">Contacto</p>
-          <h1 data-split className="display max-w-[11ch]">Dejá tu huella.</h1>
-          <p data-reveal className="lead max-w-[42ch]">Contanos qué necesitás en cuatro pasos. Con esos datos te respondemos con una propuesta concreta.</p>
-        </div>
-      </section>
+      <PageHero eyebrow="Contacto" title="Dejá tu huella."
+        lead="Contanos qué necesitás en cuatro pasos. Con esos datos te respondemos con una propuesta concreta."
+        media={{ type: 'video', src: '/media/taller/letras' }}>
+        <HeroChip solid onClick={() => document.getElementById('formulario-contacto')?.scrollIntoView({ behavior: 'smooth' })}>Completar el formulario</HeroChip>
+        <HeroChip onClick={() => window.open(canales[0][2], '_blank', 'noopener')}>Escribir por WhatsApp</HeroChip>
+      </PageHero>
 
-      <section className="bg-papel py-[clamp(56px,8vw,110px)]">
+      <section id="formulario-contacto" className="scroll-mt-20 bg-papel py-[clamp(56px,8vw,110px)]">
         <div className="wrap grid gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
           <div data-reveal><LeadForm origen="Contacto" /></div>
           <aside className="grid content-start gap-6">

@@ -6,6 +6,7 @@ import { services } from '../data/services'
 import { usePublic } from '../lib/content'
 import { ProjectCard, CtaBand } from '../components/blocks'
 import { Truchet } from '../components/Patterns'
+import PageHero, { HeroChip } from '../components/PageHero'
 
 function Filter({ label, options, value, onChange }) {
   return (
@@ -55,16 +56,15 @@ export default function Proyectos() {
     <div ref={root}>
       <title>Proyectos · gecko</title>
       <meta name="description" content="Fachadas, cartelería, stands, exhibidores y producción gráfica realizados por gecko." />
-      <section className="relative overflow-hidden bg-negro text-blanco">
-        <div className="absolute inset-y-0 right-0 w-1/2 opacity-40 [mask-image:linear-gradient(90deg,transparent,#000)]"><Truchet combo="negro" size={30} /></div>
-        <div className="wrap relative grid gap-5 py-[clamp(64px,9vw,130px)]">
-          <p className="eyebrow text-naranja">Proyectos</p>
-          <h1 data-split className="display max-w-[12ch]">Cada proyecto, una huella en la ciudad.</h1>
-          <p data-reveal className="lead max-w-[44ch] text-humo">Casos reales contados de punta a punta: qué necesitaba el cliente, cómo lo resolvimos y cómo quedó.</p>
-        </div>
-      </section>
+      <PageHero eyebrow="Proyectos" title="Cada proyecto, una huella en la ciudad."
+        lead="Casos reales contados de punta a punta: qué necesitaba el cliente, cómo lo resolvimos y con qué productos."
+        media={{ type: 'mosaic', images: projects.flatMap((p) => [p.cover, ...(p.gallery || []).slice(0, 2)]).filter(Boolean).slice(0, 24) }}
+        stats={[[projects.length, 'Obras'], [rubros.length, 'Rubros'], [3, 'Unidades'], [new Set(projects.flatMap((p) => p.products || [])).size, 'Productos en la tienda']]}>
+        <HeroChip solid to="/contacto">Contanos tu proyecto</HeroChip>
+        <HeroChip onClick={() => document.getElementById('obras')?.scrollIntoView({ behavior: 'smooth' })}>Ver las obras</HeroChip>
+      </PageHero>
 
-      <section className="bg-blanco py-[clamp(48px,7vw,96px)]">
+      <section id="obras" className="scroll-mt-20 bg-blanco py-[clamp(48px,7vw,96px)]">
         <div className="wrap grid gap-10">
           <div data-reveal className="grid gap-5 border-b border-linea pb-8 lg:grid-cols-2">
             <Filter label="Unidad" options={services.map((s) => [s.slug, s.name])} value={unidad} onChange={(v) => update('unidad', v)} />
