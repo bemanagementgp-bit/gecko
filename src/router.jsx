@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 import Shell from './layouts/Shell'
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import Home from './pages/Home'
 
 // La home carga con el bundle principal; el resto de las páginas se descarga al visitarlas.
@@ -14,8 +14,15 @@ const Tienda = lazy(() => import('./pages/Tienda'))
 const Producto = lazy(() => import('./pages/Producto'))
 const Carrito = lazy(() => import('./pages/Carrito'))
 const NoEncontrada = lazy(() => import('./pages/NoEncontrada'))
+const Panel = lazy(() => import('./pages/panel/Panel'))
+
+// El panel vive fuera del layout del sitio y se descarga solo al entrar.
+const panel = <Suspense fallback={null}><Panel /></Suspense>
 
 export const router = createBrowserRouter([
+  { path: '/panel', element: panel },
+  { path: '/panel/:type', element: panel },
+  { path: '/panel/:type/:slug', element: panel },
   {
     element: <Shell />,
     children: [

@@ -2,7 +2,8 @@ import { useLayoutEffect, useMemo, useRef } from 'react'
 import { useSearchParams } from 'react-router'
 import { gsap, Flip } from '../lib/gsap'
 import { useReveal } from '../lib/motion'
-import { categories, searchProducts, priceFor, productBySlug } from '../data/products'
+import { usePublic } from '../lib/content'
+import { searchProducts, priceFor, isQuote } from '../lib/catalog'
 import { faqs } from '../data/faqs'
 import { getRecent } from '../lib/recent'
 import { Foot } from '../components/Brand'
@@ -19,8 +20,9 @@ const sorts = [
 ]
 const sortFn = {
   destacados: (a, b) => (a.featured || 99) - (b.featured || 99),
-  menor: (a, b) => priceFor(a) - priceFor(b),
-  mayor: (a, b) => priceFor(b) - priceFor(a),
+  // los productos a cotizar van al final cuando se ordena por precio
+  menor: (a, b) => (isQuote(a) - isQuote(b)) || priceFor(a) - priceFor(b),
+  mayor: (a, b) => (isQuote(a) - isQuote(b)) || priceFor(b) - priceFor(a),
   az: (a, b) => a.name.localeCompare(b.name, 'es'),
 }
 
@@ -34,6 +36,7 @@ function Chip({ on, onClick, children, count }) {
 }
 
 export default function Tienda() {
+  const { products, categories } = usePublic()
   const root = useRef(null)
   const grid = useRef(null)
   const flip = useRef(null)
@@ -63,11 +66,11 @@ export default function Tienda() {
     flip.current = null
   }, [q, cat, orden, custom])
 
-  const base = useMemo(() => searchProducts(q), [q])
+  const base = useMemo(() => searchProducts(products, q, categories), [products, q, categories])
   const list = useMemo(() => base.filter((p) => (!cat || p.category === cat) && (!custom || p.custom)).sort(sortFn[orden] || sortFn.destacados), [base, cat, custom, orden])
   const counts = Object.fromEntries(categories.map((c) => [c.slug, base.filter((p) => p.category === c.slug && (!custom || p.custom)).length]))
   const current = categories.find((c) => c.slug === cat)
-  const recent = getRecent().map((s) => productBySlug[s]).filter(Boolean).slice(0, 4)
+  const recent = getRecent().map((s) => products.find((x) => x.slug === s)).filter(Boolean).slice(0, 4)
   const filtered = q || cat || custom || orden !== 'destacados'
 
   return (
@@ -80,7 +83,7 @@ export default function Tienda() {
         <div className="wrap relative grid gap-5 py-[clamp(56px,8vw,110px)]">
           <p className="eyebrow text-naranja">Tienda online</p>
           <h1 data-split className="display max-w-[12ch]">Pedilo online, lo hacemos en el taller.</h1>
-          <p data-reveal className="lead max-w-[44ch] text-humo">Productos estándar y personalizables con precio a la vista. Subís tu archivo, pagás online y lo retirás o te lo enviamos.</p>
+          <p data-reveal className="lead max-w-[44ch] text-humo">Los mismos productos que ves en nuestras obras: estándar con precio a la vista y piezas a medida para cotizar.</p>
           <div data-reveal className="flex flex-wrap gap-2">
             {categories.map((c) => (
               <button key={c.slug} type="button" onClick={() => { setParam('categoria', c.slug, false); document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth' }) }}

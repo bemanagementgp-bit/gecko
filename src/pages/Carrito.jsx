@@ -7,6 +7,7 @@ import { money, site } from '../config'
 import { Foot } from '../components/Brand'
 import { Button } from '../components/ui'
 import { PatternFill, Truchet } from '../components/Patterns'
+import Img from '../components/Img'
 import QtyStepper from '../components/shop/QtyStepper'
 
 const pasos = ['Tus datos', 'Entrega', 'Confirmar']
@@ -169,7 +170,7 @@ export default function Carrito() {
                 <ul className="grid max-h-[46vh] gap-0 overflow-y-auto pr-1" data-lenis-prevent>
                   {cart.items.map((i) => (
                     <li key={i.key} data-row className="grid grid-cols-[60px_minmax(0,1fr)_auto] items-start gap-3 border-b border-[#333] py-3">
-                      <span className="frame relative aspect-square overflow-hidden [--chaflan:8px]"><PatternFill variant={i.variant ?? 0} className="absolute inset-0" /></span>
+                      <span className="frame relative aspect-square overflow-hidden [--chaflan:8px]">{i.image ? <Img src={i.image} alt="" sizes="60px" className="absolute inset-0 h-full w-full object-cover" /> : <PatternFill variant={i.variant ?? 0} className="absolute inset-0" />}</span>
                       <span className="grid gap-1">
                         <Link to={`/tienda/${i.slug}`} className="text-[18px] font-extrabold leading-tight hover:text-naranja">{i.name}</Link>
                         <span className="text-[14px] text-humo">{Object.values(i.options).join(' · ')}</span>

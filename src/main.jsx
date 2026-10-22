@@ -4,14 +4,17 @@ import { RouterProvider } from 'react-router/dom'
 import './index.css'
 import { router } from './router'
 import { CartProvider } from './lib/cart'
+import { ContentProvider } from './lib/content'
 import { initTracking } from './lib/track'
 
 initTracking()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <ContentProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </ContentProvider>
   </StrictMode>,
 )

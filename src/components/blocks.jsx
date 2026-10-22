@@ -5,6 +5,7 @@ import { serviceBySlug } from '../data/services'
 import { Foot } from './Brand'
 import { Button, Photo, Placeholder } from './ui'
 import { Waves } from './Patterns'
+import { imgSrc } from '../lib/media'
 
 // Tarjeta de proyecto: el frame se abre, la foto se acerca y sube el nombre del caso.
 export function ProjectCard({ p, i = 0, size = 'md' }) {
@@ -20,7 +21,7 @@ export function ProjectCard({ p, i = 0, size = 'md' }) {
       </div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-4">
         <h3 className="text-[clamp(24px,2.2vw,30px)] transition-colors group-hover:text-hondo">{p.title}</h3>
-        <span className="text-[16px] font-bold text-tinta2">{serviceBySlug[p.unit]?.name} · {p.rubro}</span>
+        <span className="text-[16px] font-bold text-tinta2">{serviceBySlug[p.unit]?.name} · {p.rubro}{p.year ? ` · ${p.year}` : ''}</span>
       </div>
     </Link>
   )
@@ -64,9 +65,9 @@ export function BeforeAfter({ before, after, label = 'Comparar antes y después'
   const [pos, setPos] = useState(50)
   return (
     <div className="frame relative aspect-[16/10] select-none overflow-hidden bg-papel">
-      {before ? <img src={before} alt="Antes" className="absolute inset-0 h-full w-full object-cover" /> : <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,#C9C4BF_0_22px,#B3ADA7_22px_24px)] grayscale" />}
+      {before ? <img src={imgSrc(before)} alt="Antes" loading="lazy" className="absolute inset-0 h-full w-full object-cover" /> : <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,#C9C4BF_0_22px,#B3ADA7_22px_24px)] grayscale" />}
       <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${pos}%)` }}>
-        {after ? <img src={after} alt="Después" className="absolute inset-0 h-full w-full object-cover" /> : <div className="absolute inset-0 bg-[repeating-radial-gradient(circle_at_70%_120%,var(--color-naranja)_0_10px,#fff_10px_20px)]" />}
+        {after ? <img src={imgSrc(after)} alt="Después" loading="lazy" className="absolute inset-0 h-full w-full object-cover" /> : <div className="absolute inset-0 bg-[repeating-radial-gradient(circle_at_70%_120%,var(--color-naranja)_0_10px,#fff_10px_20px)]" />}
       </div>
       <div className="pointer-events-none absolute inset-y-0 w-[3px] -translate-x-1/2 bg-negro" style={{ left: `${pos}%` }}>
         <span className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[3px] border-negro bg-naranja text-[18px] font-black">↔</span>

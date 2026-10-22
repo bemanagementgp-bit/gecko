@@ -4,8 +4,7 @@ import { gsap, SplitText, useGSAP } from '../lib/gsap'
 import { useReveal } from '../lib/motion'
 import { site, money } from '../config'
 import { serviceBySlug } from '../data/services'
-import { projects } from '../data/projects'
-import { products, priceFor } from '../data/products'
+import { usePublic } from '../lib/content'
 import { faqs } from '../data/faqs'
 import { Foot } from '../components/Brand'
 import ProductCard from '../components/shop/ProductCard'
@@ -21,7 +20,7 @@ function HeroBg({ pattern }) {
 }
 
 // Categorías de la tienda relacionadas con cada unidad.
-const shopCats = { 'produccion-grafica': ['stickers-vinilos', 'materiales', 'comunicacion-visual'], 'pop-retail': ['pop'] }
+const shopCats = { 'produccion-grafica': ['vinilos', 'cortes', 'vehicular'], arquigrafia: ['corporeos', 'fachadas'], 'pop-retail': ['vinilos', 'corporeos'] }
 
 export default function Servicio({ slug }) {
   const s = serviceBySlug[slug]
@@ -41,8 +40,11 @@ export default function Servicio({ slug }) {
     })
   }, { scope: root, dependencies: [slug], revertOnUpdate: true })
 
+  const { projects, products } = usePublic()
   const related = projects.filter((p) => p.unit === slug)
-  const shop = products.filter((p) => shopCats[slug]?.includes(p.category)).slice(0, 4)
+  // primero los productos que se usaron en obras de esta unidad, después los de sus categorías
+  const used = [...new Set(related.flatMap((p) => p.products || []))].map((s) => products.find((x) => x.slug === s)).filter(Boolean)
+  const shop = [...new Set([...used, ...products.filter((p) => shopCats[slug]?.includes(p.category))])].slice(0, 4)
 
   return (
     <div ref={root} key={slug}>

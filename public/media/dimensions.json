@@ -1,0 +1,438 @@
+{
+"materiales/acm": [
+900,
+1600
+],
+"materiales/acrilico": [
+900,
+1600
+],
+"materiales/chapa-galvanizada": [
+900,
+1600
+],
+"materiales/impresion-3d": [
+2160,
+3840
+],
+"materiales/led": [
+900,
+1600
+],
+"materiales/mdf": [
+900,
+1600
+],
+"materiales/perforado": [
+1200,
+1600
+],
+"materiales/polifan": [
+900,
+1600
+],
+"materiales/pvc": [
+900,
+1600
+],
+"materiales/vinilo-esmerilado": [
+1200,
+1600
+],
+"materiales/vinilo-impreso": [
+1200,
+1600
+],
+"materiales/vinilos-color": [
+900,
+1600
+],
+"p/amalaya/aplicacion": [
+1200,
+1600
+],
+"p/amalaya/cover": [
+1200,
+1600
+],
+"p/amalaya/detalle": [
+1200,
+1600
+],
+"p/amalaya/instalacion": [
+1200,
+1600
+],
+"p/cala/acceso": [
+1200,
+1600
+],
+"p/cala/cover": [
+1200,
+1600
+],
+"p/cala/frente": [
+1200,
+1600
+],
+"p/campos-de-la-enriqueta/cover": [
+1600,
+900
+],
+"p/club-rambla/cafe": [
+1600,
+1200
+],
+"p/club-rambla/cover": [
+1200,
+1600
+],
+"p/club-rambla/frente": [
+1600,
+1200
+],
+"p/club-rambla/lateral": [
+1600,
+1200
+],
+"p/club-rambla/vidrio": [
+1200,
+1600
+],
+"p/colfarma/cover": [
+1200,
+1600
+],
+"p/colfarma/detalle": [
+1200,
+1600
+],
+"p/colfarma/isologo": [
+1200,
+1600
+],
+"p/colfarma/pared": [
+1200,
+1600
+],
+"p/colfarma/sala": [
+1200,
+1600
+],
+"p/crayon/cover": [
+1200,
+1600
+],
+"p/creperie-on-the-road/antes": [
+1200,
+1600
+],
+"p/creperie-on-the-road/aplicacion": [
+1200,
+1600
+],
+"p/creperie-on-the-road/cover": [
+1200,
+1600
+],
+"p/creperie-on-the-road/frente": [
+1200,
+1600
+],
+"p/creperie-on-the-road/lateral": [
+1200,
+1600
+],
+"p/creperie-on-the-road/taller": [
+1200,
+1600
+],
+"p/ev-days/cover": [
+1200,
+1600
+],
+"p/farmacia-garcia/acceso": [
+1200,
+1600
+],
+"p/farmacia-garcia/acceso-dia": [
+1200,
+1600
+],
+"p/farmacia-garcia/antes": [
+1280,
+960
+],
+"p/farmacia-garcia/cover": [
+1600,
+1200
+],
+"p/farmacia-garcia/cruz": [
+1200,
+1600
+],
+"p/farmacia-garcia/dia": [
+1600,
+1200
+],
+"p/farmacia-garcia/instalacion-vinilo": [
+1200,
+1600
+],
+"p/farmacia-garcia/isologo": [
+1600,
+1200
+],
+"p/farmacia-garcia/largaexpo": [
+1600,
+1167
+],
+"p/farmacia-garcia/letras": [
+1200,
+1600
+],
+"p/farmacia-garcia/noche-frente": [
+1600,
+1200
+],
+"p/farmacia-garcia/obra-1": [
+1200,
+1600
+],
+"p/farmacia-garcia/obra-2": [
+1200,
+1600
+],
+"p/farmacia-garcia/panel-dia": [
+1200,
+1600
+],
+"p/farmacia-garcia/vidriera-dia": [
+1200,
+1600
+],
+"p/farmacia-garcia/vidriera-noche": [
+1200,
+1600
+],
+"p/farmacia-garcia/vinilo": [
+1200,
+1600
+],
+"p/farmacia-roux/cover": [
+1200,
+1600
+],
+"p/farmacia-sanchez/cover": [
+1200,
+1600
+],
+"p/farmacia-sanchez/detalle": [
+1200,
+1600
+],
+"p/farmacia-sanchez/puerta": [
+1200,
+1600
+],
+"p/farmacia-sanchez/puerta-2": [
+1200,
+1600
+],
+"p/farmacia-sanchez/vidriera": [
+1600,
+1200
+],
+"p/grupo-tannat/cover": [
+1600,
+1200
+],
+"p/grupo-tannat/lateral": [
+1200,
+1600
+],
+"p/grupo-tannat/logo": [
+1200,
+1600
+],
+"p/grupo-tannat/perfil": [
+1600,
+1200
+],
+"p/grupo-tannat/trasera": [
+1600,
+1200
+],
+"p/pro-laser/cover": [
+1600,
+1200
+],
+"p/pro-laser/frente": [
+1200,
+1600
+],
+"p/pro-laser/lateral": [
+1200,
+1600
+],
+"productos/acrilico-cnc": [
+900,
+1600
+],
+"productos/acrilico-cnc-2": [
+900,
+1600
+],
+"productos/cartel-acceso": [
+1600,
+900
+],
+"productos/cruz-led": [
+900,
+1600
+],
+"productos/cruz-led-2": [
+900,
+1600
+],
+"productos/cruz-led-3": [
+1200,
+1600
+],
+"productos/cruz-led-4": [
+900,
+1600
+],
+"productos/impresion-uv": [
+900,
+1600
+],
+"productos/isologo-corporeo": [
+1200,
+1600
+],
+"productos/isologo-corporeo-2": [
+1200,
+1600
+],
+"productos/letras-corporeas": [
+1200,
+1600
+],
+"productos/letras-corporeas-2": [
+900,
+1600
+],
+"productos/letras-corporeas-3": [
+1200,
+1600
+],
+"productos/letras-corporeas-4": [
+900,
+1600
+],
+"productos/letras-iluminadas": [
+1200,
+1600
+],
+"productos/letras-iluminadas-2": [
+1200,
+1600
+],
+"productos/luminoso-forma": [
+1200,
+1600
+],
+"productos/panel-perforado": [
+1200,
+1600
+],
+"productos/panel-perforado-2": [
+1600,
+1200
+],
+"productos/panel-perforado-3": [
+1200,
+1600
+],
+"productos/ploteo": [
+1200,
+1600
+],
+"productos/ploteo-2": [
+1200,
+1600
+],
+"productos/ploteo-3": [
+1200,
+1600
+],
+"productos/polifan": [
+900,
+1600
+],
+"productos/polifan-2": [
+900,
+1600
+],
+"productos/polifan-3": [
+900,
+1600
+],
+"productos/stickers": [
+900,
+1600
+],
+"productos/stickers-2": [
+900,
+1600
+],
+"productos/stickers-3": [
+900,
+1600
+],
+"productos/vinilo-corte": [
+1200,
+1600
+],
+"productos/vinilo-corte-2": [
+1200,
+1600
+],
+"productos/vinilo-esmerilado": [
+1200,
+1600
+],
+"productos/vinilo-esmerilado-2": [
+1200,
+1600
+],
+"productos/vinilo-esmerilado-3": [
+1200,
+1600
+],
+"productos/vinilo-impreso": [
+1200,
+1600
+],
+"productos/vinilo-impreso-2": [
+1200,
+1600
+],
+"productos/vinilo-impreso-3": [
+1200,
+1600
+],
+"taller/equipo": [
+900,
+1600
+],
+"taller/herramientas": [
+900,
+1600
+],
+"taller/pizarra": [
+900,
+1600
+]
+}

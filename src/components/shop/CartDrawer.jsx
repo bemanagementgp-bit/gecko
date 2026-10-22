@@ -6,6 +6,7 @@ import { money } from '../../config'
 import { Foot } from '../Brand'
 import { Button } from '../ui'
 import { PatternFill } from '../Patterns'
+import Img from '../Img'
 import QtyStepper from './QtyStepper'
 
 // Carrito lateral: se abre al agregar un producto, sin sacar a la persona de la página.
@@ -65,7 +66,7 @@ export default function CartDrawer() {
             <ul className="flex-1 overflow-y-auto px-6" data-lenis-prevent>
               {cart.items.map((i) => (
                 <li key={i.key} data-line className={`grid grid-cols-[76px_minmax(0,1fr)] gap-4 border-b border-linea py-4 ${cart.lastAdded === i.key ? 'bg-[linear-gradient(90deg,#FFF0E9,transparent)]' : ''}`}>
-                  <Link to={`/tienda/${i.slug}`} onClick={cart.close} className="frame relative aspect-square overflow-hidden [--chaflan:10px]"><PatternFill variant={i.variant ?? 0} className="absolute inset-0" /></Link>
+                  <Link to={`/tienda/${i.slug}`} onClick={cart.close} className="frame relative aspect-square overflow-hidden [--chaflan:10px]">{i.image ? <Img src={i.image} alt="" sizes="76px" className="absolute inset-0 h-full w-full object-cover" /> : <PatternFill variant={i.variant ?? 0} className="absolute inset-0" />}</Link>
                   <div className="grid gap-1">
                     <div className="flex items-start justify-between gap-3">
                       <Link to={`/tienda/${i.slug}`} onClick={cart.close} className="text-[20px] font-extrabold leading-tight hover:text-hondo">{i.name}</Link>

@@ -6,6 +6,9 @@ import { Foot } from '../components/Brand'
 import { Photo, Placeholder, SectionHead } from '../components/ui'
 import { Truchet, Waves } from '../components/Patterns'
 import { CtaBand, Stat } from '../components/blocks'
+import { usePublic } from '../lib/content'
+import { VideoLoop, Reels } from '../components/Video'
+import Img from '../components/Img'
 
 // Equipo según el Plan de Acción de gecko. TODO gecko: confirmar nombres públicos, roles y fotos.
 const equipo = [
@@ -58,6 +61,7 @@ function Historia() {
 }
 
 export default function Taller() {
+  const { tallerClips, reels } = usePublic()
   const root = useRef(null)
   useReveal(root)
   return (
@@ -100,20 +104,31 @@ export default function Taller() {
               </div>
             ))}
           </div>
-          <Photo variant={3} ratio="aspect-[21/9]" alt="Video del taller"><Placeholder show /><span className="absolute inset-0 grid place-items-center"><span className="grid h-20 w-20 place-items-center rounded-full bg-naranja text-[28px] text-negro">▶</span></span></Photo>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4" data-reveal="stagger">
+            {tallerClips.map((v) => (
+              <figure key={v.src} className="frame relative m-0 aspect-[3/4] overflow-hidden bg-carbon [--chaflan:16px]">
+                <VideoLoop src={v.src} label={v.label} />
+                <figcaption className="absolute bottom-2 left-2 bg-negro/80 px-2 pb-0.5 text-[14px] font-bold">{v.label}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="bg-blanco py-[clamp(64px,9vw,120px)]">
         <div className="wrap grid gap-10">
           <SectionHead eyebrow="El equipo" title="Las personas detrás de cada pieza." />
-          <div data-reveal="stagger" className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {equipo.map(([n, r, d], i) => (
-              <div key={n} className="group grid gap-3">
-                <Photo variant={i} ratio="aspect-[4/5]" alt={n} className="transition-[clip-path] duration-500 [--chaflan:18px] group-hover:[--chaflan:40px]"><Placeholder show /></Photo>
-                <div><b className="block text-[28px] leading-tight">{n}</b><span className="text-[17px] font-bold text-hondo">{r}</span><p className="mt-1 text-[17px] text-tinta2">{d}</p></div>
-              </div>
-            ))}
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+            <div data-frame className="frame relative aspect-[3/4] overflow-hidden bg-papel sm:aspect-[4/3] lg:aspect-auto">
+              <Img src="/media/taller/equipo" alt="El equipo de gecko trabajando en el taller" sizes="(min-width: 1024px) 55vw, 100vw" className="absolute inset-0 h-full w-full object-cover" />
+            </div>
+            <div data-reveal="stagger" className="grid content-start gap-5">
+              {equipo.map(([n, r, d]) => (
+                <div key={n} className="grid gap-1 border-t-2 border-negro pt-3">
+                  <b className="text-[28px] leading-tight">{n}</b><span className="text-[17px] font-bold text-hondo">{r}</span><p className="text-[17px] text-tinta2">{d}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -131,6 +146,13 @@ export default function Taller() {
               {valores.map((v, i) => <span key={v} className="flex items-center gap-2 rounded-full bg-negro px-4 pb-2 pt-1 text-[19px] font-extrabold text-blanco"><Foot className="h-4 w-4 text-naranja" style={{ rotate: `${i * 40}deg` }} />{v}</span>)}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-negro py-[clamp(64px,9vw,120px)] text-blanco">
+        <div className="wrap grid gap-10">
+          <SectionHead dark eyebrow="Reels" title="El taller, en primera persona." />
+          <Reels reels={reels} />
         </div>
       </section>
 

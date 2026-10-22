@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router'
 import { gsap, Flip } from '../lib/gsap'
 import { useReveal } from '../lib/motion'
 import { services } from '../data/services'
-import { projects, rubros } from '../data/projects'
+import { usePublic } from '../lib/content'
 import { ProjectCard, CtaBand } from '../components/blocks'
 import { Truchet } from '../components/Patterns'
 
@@ -22,6 +22,8 @@ function Filter({ label, options, value, onChange }) {
 }
 
 export default function Proyectos() {
+  const { projects } = usePublic()
+  const rubros = [...new Set(projects.map((p) => p.rubro).filter(Boolean))]
   const root = useRef(null)
   const grid = useRef(null)
   const flipState = useRef(null)

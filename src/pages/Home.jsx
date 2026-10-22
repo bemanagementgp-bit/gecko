@@ -4,8 +4,9 @@ import { gsap, SplitText, useGSAP } from '../lib/gsap'
 import { useReveal } from '../lib/motion'
 import { site, money } from '../config'
 import { services, profiles } from '../data/services'
-import { projects } from '../data/projects'
-import { products, priceFor } from '../data/products'
+import { usePublic } from '../lib/content'
+import { VideoLoop, Reels } from '../components/Video'
+import Img from '../components/Img'
 import { Foot } from '../components/Brand'
 import ProductCard from '../components/shop/ProductCard'
 import { Button, Photo, Placeholder, SectionHead } from '../components/ui'
@@ -94,7 +95,12 @@ const headers = {
   frame: <div className="absolute inset-0 bg-naranja"><div className="frame absolute inset-5 bg-blanco [--chaflan:30px]"><Truchet combo="gris" size={18} /></div></div>,
 }
 
+// Obra que representa a cada unidad en la home.
+const unitCover = { 'produccion-grafica': 'grupo-tannat', arquigrafia: 'farmacia-garcia', 'pop-retail': 'amalaya' }
+
 function Servicios() {
+  const { projects } = usePublic()
+  const covers = Object.fromEntries(Object.entries(unitCover).map(([u, slug]) => [u, (projects.find((x) => x.slug === slug) || projects.find((x) => x.unit === u))?.cover]))
   return (
     <section className="border-b border-linea bg-papel py-[clamp(64px,9vw,120px)]">
       <div className="wrap grid gap-10">
@@ -102,7 +108,7 @@ function Servicios() {
         <div data-reveal="stagger" className="grid gap-4 lg:grid-cols-3">
           {services.map((s) => (
             <Link key={s.slug} to={s.path} className="frame group grid bg-blanco transition-transform duration-500 ease-gecko hover:-translate-y-1.5">
-              <div className="relative h-48 overflow-hidden bg-blanco">{headers[s.pattern]}</div>
+              <div className="relative h-56 overflow-hidden bg-blanco">{covers[s.slug] ? <><Img src={covers[s.slug]} alt="" sizes="(min-width: 1024px) 33vw, 100vw" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-gecko group-hover:scale-105" /><span className="absolute inset-x-0 bottom-0 h-1.5 bg-naranja" /></> : headers[s.pattern]}</div>
               <div className="grid gap-3 p-6">
                 <h3 className="text-[34px] transition-colors group-hover:text-hondo">{s.name}</h3>
                 <p className="text-[18px] text-tinta2">{s.intro}</p>
@@ -120,7 +126,9 @@ function Servicios() {
 }
 
 function Destacados() {
-  const list = projects.filter((p) => p.featured).slice(0, 6)
+  const { projects } = usePublic()
+  const list = [...projects].sort((a, b) => (a.featured || 99) - (b.featured || 99)).slice(0, 7)
+  const [first, ...rest] = list
   return (
     <section className="bg-blanco py-[clamp(64px,9vw,120px)]">
       <div className="wrap grid gap-10">
@@ -128,8 +136,20 @@ function Destacados() {
           <SectionHead eyebrow="Proyectos" title="El trabajo terminado habla por nosotros." />
           <Button to="/proyectos" tone="ghost">Ver todos los proyectos</Button>
         </div>
+        {first && (
+          <div data-reveal className="grid items-end gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+            <ProjectCard p={first} size="lg" />
+            <div className="grid gap-4 pb-12">
+              <p className="lead">{first.summary}</p>
+              {first.products?.length > 0 && (
+                <p className="flex items-center gap-2 text-[17px] font-bold text-hondo"><Foot className="h-5 w-5" />{first.products.length} productos de esta obra disponibles en la tienda</p>
+              )}
+              <div><Button to={`/proyectos/${first.slug}`} tone="dark">Ver la obra completa</Button></div>
+            </div>
+          </div>
+        )}
         <div data-reveal="stagger" className="grid gap-x-5 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
-          {list.map((p, i) => <ProjectCard key={p.slug} p={p} i={i} />)}
+          {rest.map((p, i) => <ProjectCard key={p.slug} p={p} i={i} />)}
         </div>
       </div>
     </section>
@@ -139,6 +159,7 @@ function Destacados() {
 const maquinas = ['Router CNC', 'Corte láser', 'Impresión de gran formato', 'Impresión 3D', 'Plotter de corte', 'Taller de armado']
 
 function TallerTeaser() {
+  const { tallerClips } = usePublic()
   return (
     <section className="relative overflow-hidden bg-negro text-blanco">
       <div className="wrap grid gap-12 py-[clamp(72px,10vw,140px)] lg:grid-cols-2">
@@ -152,7 +173,14 @@ function TallerTeaser() {
           <div><Button to="/taller" tone="orange">Conocé el taller</Button></div>
         </div>
         <div className="grid content-center gap-3">
-          <Photo variant={3} ratio="aspect-[16/10]" alt="El taller de gecko"><Placeholder show /></Photo>
+          <div className="grid grid-cols-2 gap-3" data-reveal="stagger">
+            {tallerClips.slice(0, 4).map((v) => (
+              <figure key={v.src} className="frame relative m-0 aspect-[3/4] overflow-hidden bg-carbon [--chaflan:16px]">
+                <VideoLoop src={v.src} label={v.label} />
+                <figcaption className="absolute bottom-2 left-2 bg-negro/80 px-2 pb-0.5 text-[14px] font-bold">{v.label}</figcaption>
+              </figure>
+            ))}
+          </div>
           <div data-reveal="stagger" className="flex flex-wrap gap-2">
             {maquinas.map((m) => <span key={m} className="tag border-[1.5px] border-[#444] !text-[16px]">{m}</span>)}
           </div>
@@ -178,13 +206,29 @@ function Proceso() {
   )
 }
 
+function ReelsHome() {
+  const { reels } = usePublic()
+  return (
+    <section className="bg-negro py-[clamp(64px,9vw,120px)] text-blanco">
+      <div className="wrap grid gap-10">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionHead dark eyebrow="Reels" title="Mirá cómo trabajamos." intro="Obras, procesos y materiales contados en menos de un minuto." />
+          <Button href="https://instagram.com/gecko.estudio" tone="orange">Seguinos en Instagram</Button>
+        </div>
+        <Reels reels={reels.slice(0, 4)} />
+      </div>
+    </section>
+  )
+}
+
 function TiendaTeaser() {
-  const list = products.filter((p) => p.featured).slice(0, 4)
+  const { products } = usePublic()
+  const list = products.filter((p) => p.featured).sort((a, b) => a.featured - b.featured).slice(0, 4)
   return (
     <section className="bg-papel py-[clamp(64px,9vw,120px)]">
       <div className="wrap grid gap-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
-          <SectionHead eyebrow="Tienda online" title="Lo que no necesita reunión, pedilo online." />
+          <SectionHead eyebrow="Tienda online" title="Los productos de nuestras obras, en la tienda." intro="Cruces LED, corpóreos, vinilos y más: comprá lo estándar y cotizá lo que va a medida." />
           <Button to="/tienda" tone="dark">Ir a la tienda</Button>
         </div>
         <div data-reveal="stagger" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -209,6 +253,7 @@ export default function Home() {
       <Destacados />
       <TallerTeaser />
       <Proceso />
+      <ReelsHome />
       <TiendaTeaser />
       <CtaBand title="¿Tenés un proyecto en mente?" text="Contanos qué necesitás. Te respondemos con una propuesta, plazos y presupuesto." />
     </div>

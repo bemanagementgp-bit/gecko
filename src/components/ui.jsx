@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import { Foot } from './Brand'
 import { PatternFill } from './Patterns'
+import Img from './Img'
 
 const tones = {
   dark: 'bg-negro text-blanco hover:bg-carbon',
@@ -35,10 +36,10 @@ export function Placeholder({ show, className = '' }) {
 }
 
 // Foto con el frame del manual. Sin `src` muestra un pattern de la marca en su lugar.
-export function Photo({ src, alt = '', variant = 0, ratio = 'aspect-[4/3]', className = '', frame = true, children }) {
+export function Photo({ src, alt = '', variant = 0, ratio = 'aspect-[4/3]', className = '', frame = true, sizes, eager, imgClass = '', children }) {
   return (
     <div className={`relative overflow-hidden bg-papel ${ratio} ${frame ? 'frame' : ''} ${className}`}>
-      {src ? <img src={src} alt={alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      {src ? <Img src={src} alt={alt} sizes={sizes} eager={eager} className={`absolute inset-0 h-full w-full object-cover ${imgClass}`} />
         : <PatternFill variant={variant} className="absolute inset-0" />}
       {children}
     </div>

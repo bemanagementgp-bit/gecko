@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { gsap, SplitText, useGSAP } from '../lib/gsap'
 import { useReveal } from '../lib/motion'
-import { projects } from '../data/projects'
+import { usePublic } from '../lib/content'
 import { faqs } from '../data/faqs'
 import { Foot } from '../components/Brand'
 import { Button, SectionHead } from '../components/ui'
@@ -61,9 +61,11 @@ const steps = [
 
 export default function Landing({ k }) {
   const L = landings[k]
+  const { projects } = usePublic()
   const root = useRef(null)
   useReveal(root, [k])
   const proof = projects.filter(L.proof).slice(0, 3)
+  const ba = projects.find((p) => p.before && p.after)
 
   useGSAP(() => {
     const mm = gsap.matchMedia()
@@ -112,8 +114,8 @@ export default function Landing({ k }) {
       {L.beforeAfter && (
         <section className="bg-papel py-[clamp(56px,8vw,110px)]">
           <div className="wrap grid gap-8">
-            <SectionHead eyebrow="Mirá la diferencia" title="Mismo local. Otra imagen." intro="Arrastrá para comparar." />
-            <div data-reveal><BeforeAfter placeholder /></div>
+            <SectionHead eyebrow="Mirá la diferencia" title="Mismo local. Otra imagen." intro={ba ? `${ba.title}. Arrastrá para comparar.` : 'Arrastrá para comparar.'} />
+            <div data-reveal><BeforeAfter before={ba?.before} after={ba?.after} placeholder={!ba} /></div>
           </div>
         </section>
       )}
