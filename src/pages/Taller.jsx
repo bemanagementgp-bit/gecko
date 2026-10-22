@@ -10,12 +10,11 @@ import { usePublic } from '../lib/content'
 import { VideoLoop, Reels } from '../components/Video'
 import Img from '../components/Img'
 
-// Equipo según el Plan de Acción de gecko. TODO gecko: confirmar nombres públicos, roles y fotos.
+// Socios de gecko, con su retrato (public/media/equipo).
 const equipo = [
-  ['Rodrigo', 'Diseñador industrial', 'Proyectos y coordinación general. Diseña para comercios e interpreta proyectos de estudios.'],
-  ['Renzo', 'Diseñador gráfico', 'Área gráfica y servicios rápidos: impresión, corte, asesoramiento y catálogo.'],
-  ['Agustín', 'Diseñador industrial', 'Producción en taller y ejecución en obra. Instalaciones de mediana y gran escala.'],
-  ['Emanuel', 'Taller', 'Producción, montaje e instalaciones.'],
+  ['Rodrigo', 'Diseñador industrial', 'Proyectos y coordinación general. Diseña para comercios e interpreta proyectos de estudios.', '/media/equipo/rodrigo'],
+  ['Renzo', 'Diseñador gráfico', 'Área gráfica y servicios rápidos: impresión, corte, asesoramiento y catálogo.', '/media/equipo/renzo'],
+  ['Agustín', 'Diseñador industrial', 'Producción en taller y ejecución en obra. Instalaciones de mediana y gran escala.', '/media/equipo/agustin'],
 ]
 const maquinas = [
   ['Router CNC', 'Corte y fresado de MDF, acrílico, PVC y polifan.'],
@@ -118,17 +117,20 @@ export default function Taller() {
       <section className="bg-blanco py-[clamp(64px,9vw,120px)]">
         <div className="wrap grid gap-10">
           <SectionHead eyebrow="El equipo" title="Las personas detrás de cada pieza." />
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-            <div data-frame className="frame relative aspect-[3/4] overflow-hidden bg-papel sm:aspect-[4/3] lg:aspect-auto">
-              <Img src="/media/taller/equipo" alt="El equipo de gecko trabajando en el taller" sizes="(min-width: 1024px) 55vw, 100vw" className="absolute inset-0 h-full w-full object-cover" />
-            </div>
-            <div data-reveal="stagger" className="grid content-start gap-5">
-              {equipo.map(([n, r, d]) => (
-                <div key={n} className="grid gap-1 border-t-2 border-negro pt-3">
-                  <b className="text-[28px] leading-tight">{n}</b><span className="text-[17px] font-bold text-hondo">{r}</span><p className="text-[17px] text-tinta2">{d}</p>
+          <div data-reveal="stagger" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {equipo.map(([n, r, d, foto]) => (
+              <article key={n} className="group grid content-start gap-4">
+                <div className="frame relative aspect-[4/5] overflow-hidden bg-papel [--chaflan:18px] transition-[clip-path] duration-500 ease-gecko group-hover:[--chaflan:40px]">
+                  <Img src={foto} alt={`${n}, ${r.toLowerCase()} en gecko`} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="absolute inset-0 h-full w-full object-cover object-[50%_20%] transition-transform duration-700 ease-gecko group-hover:scale-105" />
                 </div>
-              ))}
-            </div>
+                <div className="grid gap-1 border-t-2 border-negro pt-3">
+                  <b className="text-[30px] leading-tight">{n}</b>
+                  <span className="text-[17px] font-bold text-hondo">{r}</span>
+                  <p className="text-[17px] text-tinta2">{d}</p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
