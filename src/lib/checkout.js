@@ -1,39 +1,33 @@
 import { waLink, money } from '../config'
 import { track, utm } from './track'
-import { cartFiles } from './cart'
 
-const ENDPOINT = import.meta.env.VITE_CHECKOUT_ENDPOINT
+// Por ahora el pedido se cierra por WhatsApp: armamos el mensaje con el detalle y gecko
+// confirma total, envío y forma de pago desde el chat.
+// Para cobrar online más adelante: crear un backend que genere el pago y reemplazar sendOrder.
 
-// 'mercadopago' cuando hay backend de pago configurado; 'whatsapp' mientras tanto.
-export const checkoutMode = ENDPOINT ? 'mercadopago' : 'whatsapp'
+export function orderMessage({ items, total, cliente = {} }) {
+  const lines = ['¡Hola gecko! Quiero hacer este pedido desde la tienda:', '']
+  items.forEach((i) => {
+    const opts = Object.values(i.options || {}).filter(Boolean).join(' · ')
+    lines.push(`• ${i.qty} × ${i.name}${opts ? ` (${opts})` : ''} — ${money(i.price * i.qty)}`)
+    if (i.file) lines.push(`   Archivo: ${i.file}`)
+  })
+  lines.push('', `Subtotal: ${money(total)}`)
+  if (cliente.entrega) lines.push(`Entrega: ${cliente.entrega}${cliente.localidad ? ` · ${cliente.localidad}` : ''}`)
+  if (cliente.nombre) lines.push(`Nombre: ${cliente.nombre}`)
+  if (cliente.notas) lines.push(`Notas: ${cliente.notas}`)
+  if (items.some((i) => i.file)) lines.push('', 'Les adjunto los archivos de diseño en este chat.')
+  lines.push('', '¿Me confirman el total y cómo seguimos?')
+  return lines.join('\n')
+}
 
-// Inicia el pago del carrito.
-// Con VITE_CHECKOUT_ENDPOINT: se envía el pedido (con los archivos) y el backend responde { init_point } de Mercado Pago.
-// Sin endpoint (hasta que se defina la plataforma de la tienda): el pedido se envía por WhatsApp para confirmar y cobrar.
-export async function startCheckout({ items, total, cliente }) {
-  const eventId = track('InitiateCheckout', { value: total, currency: 'ARS', num_items: items.reduce((n, i) => n + i.qty, 0), content_ids: items.map((i) => i.slug) })
-
-  if (ENDPOINT) {
-    const body = new FormData()
-    body.append('pedido', JSON.stringify({ items, total, cliente, utm: utm(), eventId }))
-    items.forEach((i) => { const f = cartFiles.get(i.key); if (f) body.append(`archivo:${i.key}`, f) })
-    const res = await fetch(ENDPOINT, { method: 'POST', body })
-    if (!res.ok) throw new Error('No pudimos iniciar el pago. Probá de nuevo o terminá tu pedido por WhatsApp.')
-    const { init_point } = await res.json()
-    location.href = init_point
-    return { via: 'mercadopago' }
-  }
-
-  const lines = [
-    'Hola gecko, quiero hacer este pedido desde la tienda:',
-    ...items.map((i) => `• ${i.qty} × ${i.name} (${Object.values(i.options).join(', ')}) — ${money(i.price * i.qty)}${i.file ? ` · archivo: ${i.file}` : ''}`),
-    `Total: ${money(total)}`,
-    `Entrega: ${cliente.entrega}${cliente.direccion ? ` — ${cliente.direccion}, ${cliente.localidad} (${cliente.cp})` : ''}`,
-    `Nombre: ${cliente.nombre}${cliente.telefono ? ` · Tel: ${cliente.telefono}` : ''}${cliente.email ? ` · ${cliente.email}` : ''}`,
-    cliente.factura ? `Factura A · CUIT ${cliente.cuit}` : '',
-    cliente.notas ? `Notas: ${cliente.notas}` : '',
-  ].filter(Boolean)
-  if (items.some((i) => i.file)) lines.push('Les adjunto los archivos en este chat.')
-  window.open(waLink(lines.join('\n')), '_blank', 'noopener')
-  return { via: 'whatsapp' }
+// Abre WhatsApp con el pedido. Se llama directo desde el clic para que el navegador no lo bloquee.
+export function sendOrder(order) {
+  const url = waLink(orderMessage(order))
+  track('InitiateCheckout', { value: order.total, currency: 'ARS', num_items: order.items.reduce((n, i) => n + i.qty, 0), content_ids: order.items.map((i) => i.slug) })
+  track('Contact', { method: 'whatsapp', page: 'carrito', ...utm() })
+  const w = window.open(url, '_blank')
+  if (w) w.opener = null
+  else location.href = url // bloqueador de ventanas: se abre en la misma pestaña
+  return url
 }

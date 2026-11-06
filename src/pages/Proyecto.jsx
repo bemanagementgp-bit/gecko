@@ -46,7 +46,7 @@ function Hotspot({ h, p, n, open, onOpen, onClose, from }) {
 
 const Block = ({ n, title, text }) => (
   <div data-reveal className="grid content-start gap-3 border-t-[3px] border-negro pt-4">
-    <span className="flex items-center gap-2 text-[18px] font-black text-naranja"><Foot className="h-5 w-5 rotate-90" />0{n}</span>
+    <span className="flex items-center gap-2 text-[18px] font-black text-hondo"><Foot className="h-5 w-5 rotate-90 text-naranja" />0{n}</span>
     <h2 className="text-[clamp(30px,3vw,42px)]">{title}</h2>
     <p className="text-[20px] text-tinta2">{text}</p>
   </div>
@@ -164,7 +164,7 @@ export default function Proyecto() {
           </div>
 
           <aside className="hidden lg:block">
-            <div className="sticky top-24 grid gap-6">
+            <div className="sticky top-[calc(var(--nav-space)+16px)] grid gap-6">
               {kit.length > 0 && (
                 <div className="frame border-[1.5px] border-linea bg-blanco p-5 [--chaflan:18px]">
                   <KitPanel project={p} products={kit} materials={mats} active={active} onHover={setActive} numbered={numbered} />
@@ -185,7 +185,7 @@ export default function Proyecto() {
       {mats.length > 0 && (
         <section className="bg-papel py-[clamp(56px,8vw,110px)]">
           <div className="wrap grid gap-8">
-            <div className="grid gap-3"><p className="eyebrow text-naranja">Materiales</p><h2 data-split className="h-section">Con qué está hecho.</h2></div>
+            <div className="grid gap-3"><p className="eyebrow text-hondo">Materiales</p><h2 data-split className="h-section">Con qué está hecho.</h2></div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-reveal="stagger">
               {mats.map((m) => (
                 <article key={m.slug} id={`material-${m.slug}`} className="frame grid scroll-mt-28 grid-cols-[96px_minmax(0,1fr)] gap-4 bg-blanco p-4 [--chaflan:14px]">
@@ -206,8 +206,8 @@ export default function Proyecto() {
         <section className="bg-blanco py-[clamp(56px,8vw,110px)]">
           <div className="wrap grid gap-8">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <div className="grid gap-3"><p className="eyebrow text-naranja">Tienda</p><h2 data-split className="h-section">Los productos de esta obra.</h2></div>
-              <Link to="/tienda" className="text-[18px] font-extrabold underline underline-offset-4">Ver toda la tienda</Link>
+              <div className="grid gap-3"><p className="eyebrow text-hondo">Tienda</p><h2 data-split className="h-section">Los productos de esta obra.</h2></div>
+              <Link to="/tienda" className="-my-2.5 inline-block py-2.5 text-[18px] font-extrabold underline underline-offset-4">Ver toda la tienda</Link>
             </div>
             <div className="grid gap-x-4 gap-y-12 sm:grid-cols-2 lg:grid-cols-4" data-reveal="stagger">
               {kit.map((x) => <ProductCard key={x.slug} p={x} i={c.products.indexOf(x)} />)}

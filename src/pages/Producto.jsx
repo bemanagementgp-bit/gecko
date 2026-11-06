@@ -52,7 +52,7 @@ function Tabs({ p }) {
     ['Archivos y entrega', (
       <div key="e" className="grid max-w-[62ch] gap-3 text-[19px] text-tinta2">
         {p.custom && <p><b className="text-negro">Archivos:</b> PDF, AI, SVG, EPS o DXF en vectores, con textos convertidos a curvas. Para impresión también PNG o JPG a 150 dpi en tamaño real. Revisamos cada archivo antes de producir y te avisamos si hay que corregir algo.</p>}
-        {p.leadTime && <p><b className="text-negro">Producción:</b> {p.leadTime}{isQuote(p) ? '' : ` desde que se confirma el pago${p.custom ? ' y el archivo' : ''}`}.</p>}
+        {p.leadTime && <p><b className="text-negro">Producción:</b> {p.leadTime}{isQuote(p) ? '' : ` desde que se confirma el pedido${p.custom ? ' y el archivo' : ''}`}.</p>}
         <p><b className="text-negro">Retiro:</b> sin cargo en {site.address}, {site.city}. {site.hours}.</p>
         <p><b className="text-negro">Envío:</b> a todo el país; el costo se cotiza según la dirección al finalizar la compra.</p>
       </div>
@@ -180,7 +180,7 @@ export default function Producto() {
             <Link to="/tienda" className="hover:text-naranja">Tienda</Link> / <Link to={`/tienda?categoria=${cat.slug}`} className="hover:text-naranja">{cat.name}</Link> / <span className="text-negro">{p.name}</span>
           </nav>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
-            <div data-frame className="lg:sticky lg:top-24 lg:self-start"><Gallery product={p} variant={idx} /></div>
+            <div data-frame className="lg:sticky lg:top-[calc(var(--nav-space)+16px)] lg:self-start"><Gallery product={p} variant={idx} /></div>
 
             <div className="grid content-start gap-6">
               <div className="grid gap-3">
@@ -202,7 +202,7 @@ export default function Producto() {
                   {qty > 1 && <span className="text-[18px] font-bold text-tinta2">{money(unit)} c/u</span>}
                 </div>
                 {units && <span className="text-[17px] text-tinta2">≈ {money(Math.round(unit / units))} por unidad · {units} u. por pack</span>}
-                <span className="text-[16px] text-tinta2">Pagás online con tarjeta, cuotas o transferencia.</span>
+                <span className="text-[16px] text-tinta2">Armás el pedido y lo confirmás por WhatsApp: te pasamos el total y la forma de pago.</span>
                 {p.placeholder && import.meta.env.DEV && <span className="text-[14px] font-bold text-hondo">Precio de ejemplo</span>}
               </div>
               )}
@@ -256,7 +256,7 @@ export default function Producto() {
                   ['Fabricación en nuestro taller', site.city],
                   ['Instalación', 'La coordinamos con vos'],
                 ] : [
-                  ...(p.leadTime ? [[`Producción: ${p.leadTime}`, 'Desde que se confirma el pago']] : []),
+                  ...(p.leadTime ? [[`Producción: ${p.leadTime}`, 'Desde que se confirma el pedido']] : []),
                   ['Retiro sin cargo en el taller', site.city],
                   ['Envíos a todo el país', 'Costo según la dirección'],
                   ...(p.custom ? [['Revisamos tu archivo antes de producir', 'Si hay que corregir algo, te avisamos']] : []),

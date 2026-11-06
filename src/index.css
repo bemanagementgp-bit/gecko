@@ -18,6 +18,10 @@
   --ease-gecko: cubic-bezier(.2, .8, .2, 1);
 }
 
+/* Alto que ocupa el nav flotante: los heros pasan por debajo, el resto arranca después */
+:root { --nav-space: 86px; --hdr: var(--nav-space); }
+@media (min-width: 1024px) { :root { --nav-space: 92px; } }
+
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
   html.lenis, html.lenis body { height: auto; }
@@ -53,6 +57,9 @@
 }
 
 .split-line { padding-bottom: .08em; }
+/* Migas de pan: área táctil cómoda sin cambiar el diseño */
+nav[aria-label="Ruta"] a { display: inline-block; padding-block: 11px; margin-block: -11px; }
+@keyframes cinta { to { transform: translateX(-50%); } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

@@ -10,6 +10,6 @@ export const faqs = {
     ['¿Cómo mando mi diseño?', 'En los productos personalizables podés subir el archivo al agregarlo al carrito. Si no lo tenés, te lo diseñamos.'],
     ['¿Qué formatos de archivo aceptan?', 'PDF, AI, SVG o EPS en vectores. Para impresión, también PNG o JPG en alta resolución.'],
     ['¿Hacen envíos?', 'Sí, a todo el país. También podés retirar sin cargo en el taller.'],
-    ['¿Cómo pago?', 'Con Mercado Pago: tarjeta de crédito o débito, cuotas y transferencia.'],
+    ['¿Cómo pago?', 'Armás el carrito y nos lo mandás por WhatsApp. Te confirmamos el total con envío y te pasamos las formas de pago.'],
   ],
 }

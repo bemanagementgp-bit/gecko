@@ -89,10 +89,10 @@ export default function Landing({ k }) {
       <title>{`${L.title} · gecko`}</title>
       <meta name="description" content={`${L.hook} ${L.sub}`} />
 
-      <section className="relative overflow-hidden bg-naranja text-blanco">
+      <section className="relative -mt-[var(--nav-space)] overflow-hidden bg-naranja text-blanco">
         <Waves walker="rgba(255,255,255,.5)" />
-        <div className="wrap relative grid gap-7 py-[clamp(56px,8vw,120px)]">
-          <p data-hero-fade className="eyebrow">{L.title}</p>
+        <div className="wrap relative grid gap-7 pb-[clamp(56px,8vw,120px)] pt-[calc(var(--nav-space)+clamp(40px,6vw,96px))]">
+          <p data-hero-fade className="eyebrow text-negro">{L.title}</p>
           <h1 data-hook className="max-w-[17ch] text-[clamp(46px,7.4vw,108px)] font-black leading-[.94]">{L.hook}</h1>
           <p data-hero-fade className="lead max-w-[46ch]">{L.sub}</p>
           <div data-hero-fade className="flex flex-wrap gap-3"><Button onClick={toForm} tone="dark" size="lg">Contanos tu proyecto</Button></div>

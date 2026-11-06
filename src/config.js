@@ -3,7 +3,8 @@ export const site = {
   name: 'gecko',
   tagline: 'Soluciones creativas',
   claim: 'Diseñamos. Fabricamos. Instalamos.',
-  whatsapp: import.meta.env.VITE_WHATSAPP || '5492210000000', // TODO: número real de WhatsApp Business
+  whatsapp: import.meta.env.VITE_WHATSAPP || '5492215857686', // WhatsApp de gecko: 221 585 7686
+  phone: '221 585 7686',
   email: 'hola@gecko.estudio', // TODO: confirmar casilla
   instagram: 'gecko.estudio',
   city: 'La Plata, Buenos Aires',

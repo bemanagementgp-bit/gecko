@@ -20,7 +20,7 @@ export default function Footer({ minimal = false }) {
             <FooterCol title="gecko" links={[['/proyectos', 'Proyectos'], ['/taller', 'Taller y equipo'], ['/tienda', 'Tienda'], ['/contacto', 'Contacto']]} />
             <div className="grid content-start gap-2 text-[18px]">
               <p className="eyebrow mb-1 text-cafe">Contacto</p>
-              <a href={waLink('Hola gecko')} target="_blank" rel="noopener" className="font-bold hover:underline">WhatsApp</a>
+              <a href={waLink('Hola gecko')} target="_blank" rel="noopener" className="font-bold hover:underline">WhatsApp {site.phone}</a>
               <a href={`mailto:${site.email}`} className="font-bold hover:underline">{site.email}</a>
               <a href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noopener" className="font-bold hover:underline">@{site.instagram}</a>
               <p className="text-cafe">{site.address}<br />{site.city}</p>

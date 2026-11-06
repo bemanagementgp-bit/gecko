@@ -119,11 +119,11 @@ export default function PageHero({ eyebrow, title, lead, media, stats = [], chil
   }, { scope: root })
 
   return (
-    <section ref={root} className="relative isolate overflow-hidden bg-negro text-blanco">
+    <section ref={root} className="relative isolate -mt-[var(--nav-space)] overflow-hidden bg-negro text-blanco">
       {media?.type === 'video' && <VideoBg src={media.src} />}
       {media?.type === 'mosaic' && <Mosaic images={media.images} />}
       {media?.type === 'stack' && <ProductStack products={media.products} />}
-      <div className="wrap relative grid lg:min-h-[clamp(620px,82vh,820px)] content-between gap-10 pb-8 pt-[clamp(48px,7vw,96px)]">
+      <div className="wrap relative grid lg:min-h-[clamp(620px,82vh,820px)] content-between gap-10 pb-8 pt-[calc(var(--nav-space)+clamp(32px,6vw,80px))]">
         <div data-hero-copy className="grid max-w-[760px] content-start gap-6">
           {crumbs && <nav data-hero-fade aria-label="Ruta" className="text-[16px] font-bold text-humo">{crumbs}</nav>}
           <p data-hero-fade className="eyebrow flex items-center gap-2 text-naranja"><Foot className="h-4 w-4 rotate-90" />{eyebrow}</p>

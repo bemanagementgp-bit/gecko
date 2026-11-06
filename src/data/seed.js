@@ -279,7 +279,7 @@ export const projects = [
     hotspots: [{ x: 50, y: 50, product: 'vinilo-impreso-vidriera' }], published: true,
   },
   {
-    slug: 'ev-days', title: 'EV Days · Nueva Captiva', client: 'Chevrolet', unit: 'pop-retail', rubro: 'Automotriz', year: 2025,
+    slug: 'ev-days', title: 'EV Days · Nueva Captiva', client: 'Concesionaria Chevrolet', unit: 'pop-retail', rubro: 'Automotriz', year: 2025,
     summary: 'Vidriera de lanzamiento para concesionaria: gráfica impresa de gran formato en altura.',
     necesidad: 'Comunicar el lanzamiento de un vehículo eléctrico en el frente vidriado de una concesionaria.',
     proceso: 'Imprimimos la campaña en vinilo y la colocamos en altura sobre la vidriera, paño por paño.',

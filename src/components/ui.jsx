@@ -12,7 +12,7 @@ const tones = {
 
 // Botón o link con la huella que avanza al pasar el cursor.
 export function Button({ to, href, tone = 'dark', size = 'md', className = '', children, foot = true, ...rest }) {
-  const sz = size === 'lg' ? 'px-7 pb-3.5 pt-2.5 text-[22px]' : size === 'sm' ? 'px-3.5 pb-1.5 pt-0.5 text-[16px]' : 'px-5 pb-2.5 pt-1.5 text-[19px]'
+  const sz = size === 'lg' ? 'px-7 pb-3.5 pt-2.5 text-[22px]' : size === 'sm' ? 'px-4 pb-2 pt-1.5 text-[16px]' : 'px-5 pb-2.5 pt-1.5 text-[19px]'
   const cls = `group inline-flex items-center gap-2.5 rounded-full font-extrabold transition-colors duration-200 disabled:opacity-40 ${tones[tone]} ${sz} ${className}`
   const inner = (
     <>
@@ -25,7 +25,7 @@ export function Button({ to, href, tone = 'dark', size = 'md', className = '', c
   return <button type="button" className={cls} {...rest}>{inner}</button>
 }
 
-export function Eyebrow({ children, className = 'text-naranja' }) {
+export function Eyebrow({ children, className = 'text-hondo' }) {
   return <p className={`eyebrow ${className}`}>{children}</p>
 }
 
@@ -49,7 +49,7 @@ export function Photo({ src, alt = '', variant = 0, ratio = 'aspect-[4/3]', clas
 export function SectionHead({ eyebrow, title, intro, dark, className = '' }) {
   return (
     <div className={`grid max-w-[900px] gap-4 ${className}`}>
-      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      {eyebrow && <Eyebrow className={dark ? 'text-naranja' : 'text-hondo'}>{eyebrow}</Eyebrow>}
       <h2 data-split className="h-section">{title}</h2>
       {intro && <p data-reveal className={`max-w-[58ch] text-[clamp(19px,1.6vw,22px)] ${dark ? 'text-humo' : 'text-tinta2'}`}>{intro}</p>}
     </div>

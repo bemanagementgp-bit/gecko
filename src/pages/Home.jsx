@@ -42,11 +42,11 @@ function Hero() {
   }, { scope: root })
 
   return (
-    <section ref={root} className="relative overflow-hidden bg-naranja text-blanco">
+    <section ref={root} className="relative -mt-[var(--nav-space)] overflow-hidden bg-naranja text-blanco">
       <Waves walker="rgba(255,255,255,.55)" />
-      <div className="wrap relative grid items-center gap-10 py-[clamp(56px,8vw,120px)] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+      <div className="wrap relative grid items-center gap-10 pb-[clamp(56px,8vw,120px)] pt-[calc(var(--nav-space)+clamp(40px,6vw,96px))] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
         <div data-hero-copy className="grid gap-7">
-          <p data-hero-fade className="eyebrow">{site.tagline} · {site.city}</p>
+          <p data-hero-fade className="eyebrow text-negro">{site.tagline} · {site.city}</p>
           <h1 data-hero-title className="display max-w-[10ch]">Diseñamos. Fabricamos. Instalamos.</h1>
           <p data-hero-fade className="lead max-w-[38ch]">Comunicación visual y espacios comerciales, desde la idea hasta la instalación. Diseño, taller y montaje bajo un mismo techo.</p>
           <div data-hero-fade className="flex flex-wrap gap-3">
@@ -61,6 +61,30 @@ function Hero() {
 }
 
 // "Adaptación": cada perfil entra por su propia puerta.
+// Prueba social: los clientes de las obras cargadas, en una cinta que enlaza a Proyectos.
+function Clientes() {
+  const { projects } = usePublic()
+  const names = [...new Set(projects.map((p) => p.client).filter(Boolean))]
+  if (names.length < 4) return null
+  return (
+    <section className="border-b border-linea bg-blanco py-8">
+      <div className="wrap mb-4 flex flex-wrap items-baseline justify-between gap-3">
+        <p className="eyebrow text-hondo">Marcas que ya dejaron su huella con nosotros</p>
+        <Link to="/proyectos" className="-my-2.5 inline-block py-2.5 text-[16px] font-bold underline underline-offset-4 hover:text-hondo">Ver {projects.length} obras</Link>
+      </div>
+      <div className="overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+        <div className="flex w-max animate-[cinta_60s_linear_infinite] items-center gap-10 pr-10 motion-reduce:animate-none">
+          {[...names, ...names].map((n, i) => (
+            <span key={i} className="flex items-center gap-10 whitespace-nowrap text-[clamp(24px,2.6vw,34px)] font-black text-negro/80">
+              {n}<Foot className="h-5 w-5 rotate-90 text-naranja" />
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function Perfiles() {
   const [hover, setHover] = useState(0)
   const navigate = useNavigate()
@@ -247,6 +271,7 @@ export default function Home() {
       <title>gecko · Diseñamos. Fabricamos. Instalamos.</title>
       <meta name="description" content="Estudio y taller de comunicación visual en La Plata: producción gráfica, arquigrafía, fachadas, P.O.P. y retail. Diseño, fabricación e instalación." />
       <Hero />
+      <Clientes />
       <Perfiles />
       <Marquee words={['Diseñamos', 'Fabricamos', 'Instalamos', 'Soluciones creativas', 'Materializamos tus ideas']} />
       <Servicios />

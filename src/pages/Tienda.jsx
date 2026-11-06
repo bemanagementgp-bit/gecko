@@ -90,7 +90,7 @@ export default function Tienda() {
 
       <div className="border-b border-linea bg-papel">
         <div data-reveal="stagger" className="wrap grid gap-4 py-5 text-[17px] font-bold sm:grid-cols-2 lg:grid-cols-4">
-          {[['Pagás online', 'Tarjeta, cuotas o transferencia'], ['Retiro sin cargo', 'En el taller de La Plata'], ['Envíos a todo el país', 'Se cotizan al finalizar'], ['Revisamos tu archivo', 'Antes de producir, sin costo']].map(([t, d], i) => (
+          {[['Pedís por WhatsApp', 'Te confirmamos total y forma de pago'], ['Retiro sin cargo', 'En el taller de La Plata'], ['Envíos a todo el país', 'Cotizados según destino'], ['Revisamos tu archivo', 'Antes de producir, sin costo']].map(([t, d], i) => (
             <div key={t} className="flex items-center gap-3"><Foot className="h-6 w-6 shrink-0 text-naranja" style={{ rotate: `${60 + i * 25}deg` }} /><span>{t}<span className="block font-medium text-tinta2">{d}</span></span></div>
           ))}
         </div>

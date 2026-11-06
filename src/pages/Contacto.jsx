@@ -14,7 +14,7 @@ export default function Contacto() {
   const root = useRef(null)
   useReveal(root)
   const canales = [
-    ['WhatsApp', 'La vía más rápida', waLink('Hola gecko, quiero hacer una consulta.')],
+    ['WhatsApp', `${site.phone} · la vía más rápida`, waLink('Hola gecko, quiero hacer una consulta.')],
     ['Email', site.email, `mailto:${site.email}`],
     ['Instagram', `@${site.instagram}`, `https://instagram.com/${site.instagram}`],
   ]

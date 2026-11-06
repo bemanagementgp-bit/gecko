@@ -51,7 +51,7 @@ export function KitPanel({ project, products, materials, active, onHover, number
   return (
     <div className="grid gap-5">
       <div>
-        <p className="eyebrow text-naranja">Lo que usamos en esta obra</p>
+        <p className="eyebrow text-hondo">Lo que usamos en esta obra</p>
         <p className="mt-1 text-[16px] text-tinta2">Los mismos productos, listos para tu proyecto.</p>
       </div>
       <ul className="-mx-2 grid gap-1">

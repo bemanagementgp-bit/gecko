@@ -57,6 +57,7 @@ export default function Shell({ minimal = false }) {
     <>
       <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-blanco focus:p-3">Saltar al contenido</a>
       <Header minimal={minimal} />
+      <div aria-hidden="true" className="h-[var(--nav-space)]" />
       <main id="contenido"><Suspense fallback={<div className="min-h-[70vh]" />}><Outlet /></Suspense></main>
       <Footer minimal={minimal} />
       <WhatsAppFab />

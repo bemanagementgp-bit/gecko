@@ -2,85 +2,52 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { gsap, useGSAP } from '../lib/gsap'
 import { useCart } from '../lib/cart'
-import { startCheckout, checkoutMode } from '../lib/checkout'
+import { sendOrder } from '../lib/checkout'
 import { money, site } from '../config'
 import { Foot } from '../components/Brand'
 import { Button } from '../components/ui'
-import { PatternFill, Truchet } from '../components/Patterns'
+import { PatternFill } from '../components/Patterns'
 import Img from '../components/Img'
 import QtyStepper from '../components/shop/QtyStepper'
 
-const pasos = ['Tus datos', 'Entrega', 'Confirmar']
+const WaIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z" /></svg>
+)
 
-function Field({ label, children, className = '' }) {
-  return <label className={`grid gap-1.5 ${className}`}><span className="text-[14px] font-extrabold uppercase tracking-wider text-tinta2">{label}</span>{children}</label>
-}
+const pasos = [
+  ['Mandás el pedido', 'Se abre WhatsApp con el detalle del carrito listo para enviar.'],
+  ['Te confirmamos', 'Revisamos tu archivo y te pasamos el total con envío.'],
+  ['Pagás y producimos', 'Coordinamos el pago y arrancamos en el taller.'],
+]
 
 export default function Carrito() {
   const cart = useCart()
   const root = useRef(null)
-  const panel = useRef(null)
-  const feet = useRef(null)
-  const [step, setStep] = useState(0)
-  const [c, setC] = useState({ nombre: '', email: '', telefono: '', entrega: 'Retiro en el taller', direccion: '', localidad: '', cp: '', factura: false, cuit: '', notas: '' })
-  const [status, setStatus] = useState('idle')
-  const [error, setError] = useState('')
-  const set = (k) => (e) => setC((x) => ({ ...x, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
+  const [c, setC] = useState({ nombre: '', entrega: 'Retiro en el taller', localidad: '', notas: '' })
+  const [sent, setSent] = useState('')
+  const set = (k) => (e) => setC((x) => ({ ...x, [k]: e.target.value }))
   const envio = c.entrega === 'Envío a domicilio'
-
-  const valid = [
-    c.nombre.trim().length > 1 && /\S+@\S+\.\S+/.test(c.email) && c.telefono.replace(/\D/g, '').length >= 8,
-    !envio || (c.direccion.trim().length > 4 && c.localidad.trim().length > 1 && /^\w{4,8}$/.test(c.cp.trim())),
-    !c.factura || c.cuit.replace(/\D/g, '').length === 11,
-  ]
 
   const { contextSafe } = useGSAP(() => {
     gsap.from('[data-row]', { x: -30, opacity: 0, stagger: 0.06, duration: 0.6 })
   }, { scope: root })
-
-  const go = contextSafe((to) => {
-    if (to > step && !valid[step]) return
-    setStep(to)
-    gsap.fromTo(panel.current, { x: to > step ? 40 : -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' })
-    if (to > step) gsap.fromTo(feet.current.children[step], { scale: 1.8, rotate: -40 }, { scale: 1, rotate: 0, duration: 0.6, ease: 'back.out(3)' })
+  const remove = contextSafe((key, el) => {
+    gsap.to(el, { x: 60, opacity: 0, duration: 0.35, ease: 'power3.in' })
+    setTimeout(() => cart.remove(key), 350)
   })
 
-  const pay = async () => {
-    setStatus('sending'); setError('')
-    try {
-      await startCheckout({ items: cart.items, total: cart.total, cliente: c })
-      setStatus('done')
-    } catch (err) {
-      setError(err.message); setStatus('idle')
-    }
-  }
-
-  if (status === 'done') {
-    return (
-      <section className="relative grid min-h-[72vh] place-items-center overflow-hidden bg-naranja">
-        <title>Pedido enviado · gecko</title>
-        <Truchet combo="naranja" spin size={30} />
-        <div className="frame relative m-6 grid max-w-[540px] gap-3 bg-blanco p-8">
-          <Foot className="h-12 w-12 text-naranja" />
-          <h1 className="text-[44px] font-black">¡Pedido enviado!</h1>
-          <p className="text-[19px] text-tinta2">Te escribimos a {c.email} para confirmar el pedido{cart.items.some((i) => i.file) ? ', revisar tus archivos' : ''} y coordinar la entrega.</p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Button to="/tienda" tone="dark" onClick={cart.clear}>Volver a la tienda</Button>
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  const inputCls = 'field'
+  const send = () => setSent(sendOrder({ items: cart.items, total: cart.total, cliente: c }))
 
   return (
     <div ref={root}>
       <title>Carrito · Tienda · gecko</title>
-      <section className="bg-blanco py-[clamp(32px,5vw,72px)]">
+      <section className="bg-blanco pb-[clamp(56px,8vw,110px)] pt-[clamp(24px,4vw,56px)]">
         <div className="wrap grid gap-8">
-          <nav aria-label="Ruta" className="text-[16px] font-bold text-tinta2"><Link to="/tienda" className="hover:text-naranja">← Seguir comprando</Link></nav>
-          <h1 className="text-[clamp(48px,6vw,88px)] font-black">Finalizar compra</h1>
+          <nav aria-label="Ruta" className="text-[16px] font-bold text-tinta2"><Link to="/tienda" className="hover:text-hondo">← Seguir comprando</Link></nav>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h1 className="text-[clamp(44px,6vw,84px)] font-black">Tu pedido</h1>
+            {cart.items.length > 0 && <p className="text-[18px] font-bold text-tinta2">{cart.count} {cart.count === 1 ? 'producto' : 'productos'}</p>}
+          </div>
 
           {cart.items.length === 0 ? (
             <div className="frame grid justify-items-start gap-4 bg-papel p-8">
@@ -89,107 +56,64 @@ export default function Carrito() {
               <Button to="/tienda" tone="orange">Ir a la tienda</Button>
             </div>
           ) : (
-            <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-              {/* checkout en 3 pasos */}
-              <div className="frame grid gap-6 bg-papel p-[clamp(20px,3vw,36px)]">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <ol ref={feet} className="flex items-center gap-2" aria-label="Pasos">
-                    {pasos.map((s, i) => (
-                      <li key={s}>
-                        <button type="button" onClick={() => i < step && go(i)} disabled={i > step} aria-current={i === step ? 'step' : undefined}
-                          className={`flex items-center gap-1.5 text-[17px] font-extrabold ${i === step ? 'text-negro' : i < step ? 'text-hondo hover:underline' : 'text-tinta2/60'}`}>
-                          <Foot className={`h-6 w-6 ${i < step ? 'text-naranja' : i === step ? 'text-negro' : 'text-gris'}`} />{s}
-                        </button>
-                      </li>
-                    ))}
-                  </ol>
-                  <span className="text-[16px] font-bold text-tinta2">Paso {step + 1} de 3</span>
-                </div>
-
-                <div ref={panel} className="grid gap-4">
-                  {step === 0 && (
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <Field label="Nombre y apellido *" className="sm:col-span-2"><input id="c-nombre" autoComplete="name" value={c.nombre} onChange={set('nombre')} className={inputCls} /></Field>
-                      <Field label="Email *"><input id="c-email" type="email" autoComplete="email" value={c.email} onChange={set('email')} className={inputCls} /></Field>
-                      <Field label="WhatsApp *"><input id="c-tel" type="tel" autoComplete="tel" value={c.telefono} onChange={set('telefono')} placeholder="221 555 5555" className={inputCls} /></Field>
-                      <label className="flex cursor-pointer items-center gap-2 text-[17px] font-bold sm:col-span-2"><input id="c-factura" type="checkbox" checked={c.factura} onChange={set('factura')} className="h-5 w-5 accent-[#F15A24]" />Necesito factura A</label>
-                      {c.factura && <Field label="CUIT *"><input id="c-cuit" inputMode="numeric" value={c.cuit} onChange={set('cuit')} placeholder="30-12345678-9" className={inputCls} /></Field>}
-                    </div>
-                  )}
-                  {step === 1 && (
-                    <div className="grid gap-4">
-                      <fieldset className="grid gap-2.5 sm:grid-cols-2">
-                        <legend className="sr-only">Forma de entrega</legend>
-                        {[['Retiro en el taller', `Sin cargo · ${site.city}`], ['Envío a domicilio', 'Costo según la dirección']].map(([o, d]) => (
-                          <label key={o} className={`frame flex cursor-pointer items-start gap-3 border-[1.5px] bg-blanco p-4 [--chaflan:12px] ${c.entrega === o ? 'border-naranja ring-2 ring-naranja' : 'border-negro/20'}`}>
-                            <input type="radio" name="entrega" value={o} checked={c.entrega === o} onChange={set('entrega')} className="mt-1.5 h-4 w-4 accent-[#F15A24]" />
-                            <span><b className="block text-[20px]">{o}</b><span className="text-[16px] text-tinta2">{d}</span></span>
-                          </label>
-                        ))}
-                      </fieldset>
-                      {envio ? (
-                        <div className="grid gap-4 sm:grid-cols-[2fr_1.3fr_1fr]">
-                          <Field label="Dirección *"><input id="c-dir" autoComplete="street-address" value={c.direccion} onChange={set('direccion')} className={inputCls} /></Field>
-                          <Field label="Localidad *"><input id="c-loc" autoComplete="address-level2" value={c.localidad} onChange={set('localidad')} className={inputCls} /></Field>
-                          <Field label="CP *"><input id="c-cp" autoComplete="postal-code" value={c.cp} onChange={set('cp')} className={inputCls} /></Field>
+            <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+              <div className="grid gap-8">
+                <ul className="border-t-2 border-negro">
+                  {cart.items.map((i, k) => (
+                    <li key={i.key} data-row className="grid grid-cols-[84px_minmax(0,1fr)] gap-4 border-b border-linea py-5 sm:grid-cols-[110px_minmax(0,1fr)_auto]">
+                      <Link to={`/tienda/${i.slug}`} className="frame relative aspect-square overflow-hidden bg-papel [--chaflan:12px]">
+                        {i.image ? <Img src={i.image} alt="" sizes="110px" className="absolute inset-0 h-full w-full object-cover" /> : <PatternFill variant={k} className="absolute inset-0" />}
+                      </Link>
+                      <div className="grid min-w-0 content-start gap-1">
+                        <Link to={`/tienda/${i.slug}`} className="text-[22px] font-extrabold leading-tight hover:text-hondo">{i.name}</Link>
+                        <span className="text-[16px] text-tinta2">{Object.values(i.options || {}).join(' · ')}</span>
+                        {i.file && <span className="truncate text-[15px] font-bold">Archivo: {i.file}</span>}
+                        <div className="mt-2 flex flex-wrap items-center gap-4">
+                          <QtyStepper value={i.qty} onChange={(q) => cart.setQty(i.key, q)} size="sm" label={`Cantidad de ${i.name}`} />
+                          <button type="button" onClick={(e) => remove(i.key, e.currentTarget.closest('li'))} className="text-[16px] font-bold text-tinta2 underline underline-offset-4 hover:text-hondo">Quitar</button>
                         </div>
-                      ) : (
-                        <p className="text-[18px] text-tinta2">Retirás en <b className="text-negro">{site.address}, {site.city}</b>. {site.hours}. Te avisamos cuando esté listo.</p>
-                      )}
-                      <Field label="Notas para el pedido"><textarea id="c-notas" rows={2} value={c.notas} onChange={set('notas')} placeholder="Horario de entrega, referencias del archivo, etc." className={`${inputCls} resize-y`} /></Field>
-                    </div>
-                  )}
-                  {step === 2 && (
-                    <div className="grid gap-3 text-[18px]">
-                      {[['Contacto', `${c.nombre} · ${c.email} · ${c.telefono}`, 0], ['Entrega', envio ? `${c.direccion}, ${c.localidad} (${c.cp})` : `Retiro en el taller · ${site.city}`, 1], ['Facturación', c.factura ? `Factura A · CUIT ${c.cuit}` : 'Consumidor final', 0]].map(([k, v, s]) => (
-                        <div key={k} className="flex items-start justify-between gap-4 border-b border-linea pb-3">
-                          <span><b className="block text-[15px] uppercase tracking-wider text-tinta2">{k}</b>{v}</span>
-                          <button type="button" onClick={() => go(s)} className="text-[16px] font-bold underline underline-offset-4">Editar</button>
-                        </div>
-                      ))}
-                      <p className="text-[16px] text-tinta2">
-                        {checkoutMode === 'mercadopago' ? 'Vas a pagar en Mercado Pago. Si hay envío, te pasamos el costo antes de despacharlo.' : 'Te mandamos el pedido por WhatsApp para confirmarlo y pasarte el link de pago.'}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {error && <p role="alert" className="font-bold text-hondo">{error}</p>}
-
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  {step > 0 ? <button type="button" onClick={() => go(step - 1)} className="text-[18px] font-bold underline-offset-4 hover:underline">← Volver</button> : <span />}
-                  {step < 2
-                    ? <Button tone="dark" onClick={() => go(step + 1)} disabled={!valid[step]}>Continuar</Button>
-                    : <Button tone="orange" size="lg" onClick={pay} disabled={status === 'sending'}>{status === 'sending' ? 'Procesando…' : checkoutMode === 'mercadopago' ? `Pagar ${money(cart.total)}` : 'Enviar pedido'}</Button>}
-                </div>
-              </div>
-
-              {/* resumen */}
-              <aside className="frame grid gap-4 bg-negro p-6 text-blanco lg:sticky lg:top-24">
-                <p className="text-[26px] font-black">Tu pedido</p>
-                <ul className="grid max-h-[46vh] gap-0 overflow-y-auto pr-1" data-lenis-prevent>
-                  {cart.items.map((i) => (
-                    <li key={i.key} data-row className="grid grid-cols-[60px_minmax(0,1fr)_auto] items-start gap-3 border-b border-[#333] py-3">
-                      <span className="frame relative aspect-square overflow-hidden [--chaflan:8px]">{i.image ? <Img src={i.image} alt="" sizes="60px" className="absolute inset-0 h-full w-full object-cover" /> : <PatternFill variant={i.variant ?? 0} className="absolute inset-0" />}</span>
-                      <span className="grid gap-1">
-                        <Link to={`/tienda/${i.slug}`} className="text-[18px] font-extrabold leading-tight hover:text-naranja">{i.name}</Link>
-                        <span className="text-[14px] text-humo">{Object.values(i.options).join(' · ')}</span>
-                        {i.file && <span className="truncate text-[13px] font-bold text-humo">Archivo: {i.file}</span>}
-                        <span className="mt-1 flex items-center gap-3">
-                          <QtyStepper size="sm" value={i.qty} onChange={(q) => cart.setQty(i.key, q)} label={`Cantidad de ${i.name}`} />
-                          <button type="button" onClick={() => cart.remove(i.key)} className="text-[14px] font-bold text-humo underline underline-offset-4 hover:text-naranja">Quitar</button>
-                        </span>
-                      </span>
-                      <span className="text-[18px] font-black tabular-nums">{money(i.price * i.qty)}</span>
+                      </div>
+                      <span className="col-start-2 text-[22px] font-black tabular-nums sm:col-start-auto">{money(i.price * i.qty)}</span>
                     </li>
                   ))}
                 </ul>
-                <dl className="grid gap-1.5 text-[18px]">
-                  <div className="flex justify-between"><dt className="text-humo">Subtotal</dt><dd className="m-0 tabular-nums">{money(cart.total)}</dd></div>
-                  <div className="flex justify-between"><dt className="text-humo">Entrega</dt><dd className="m-0">{envio ? 'A cotizar' : 'Sin cargo'}</dd></div>
-                  <div className="mt-2 flex items-baseline justify-between border-t border-[#444] pt-3"><dt className="text-[20px] font-bold">Total</dt><dd className="m-0 text-[36px] font-black tabular-nums text-naranja">{money(cart.total)}</dd></div>
-                </dl>
-                <p className="flex items-center gap-2 text-[15px] text-humo"><Foot className="h-4 w-4 text-naranja" />Pago seguro con Mercado Pago: tarjeta, cuotas o transferencia.</p>
+                <ol className="grid gap-4 sm:grid-cols-3">
+                  {pasos.map(([t, d], i) => (
+                    <li key={t} className="grid content-start gap-1.5 border-t-2 border-negro pt-3">
+                      <span className="text-[15px] font-black text-hondo">0{i + 1}</span>
+                      <b className="text-[21px] leading-tight">{t}</b>
+                      <span className="text-[16px] text-tinta2">{d}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <aside className="frame grid gap-5 bg-negro p-6 text-blanco [--chaflan:18px] lg:sticky lg:top-[calc(var(--nav-space)+16px)]">
+                <div className="flex items-baseline justify-between border-b border-white/15 pb-4">
+                  <span className="text-[19px] font-bold">Subtotal</span>
+                  <span className="text-[38px] font-black tabular-nums text-naranja">{money(cart.total)}</span>
+                </div>
+                <p className="text-[16px] text-humo">El total final, con envío si corresponde, te lo confirmamos por WhatsApp.</p>
+                <fieldset className="grid gap-2 sm:grid-cols-2">
+                  <legend className="mb-2 text-[14px] font-extrabold uppercase tracking-wider text-humo">Entrega</legend>
+                  {['Retiro en el taller', 'Envío a domicilio'].map((o) => (
+                    <label key={o} className={`flex cursor-pointer items-center gap-2.5 rounded-xl border-[1.5px] p-3 text-[17px] font-bold transition-colors ${c.entrega === o ? 'border-naranja bg-white/5' : 'border-white/20 hover:border-white/50'}`}>
+                      <input type="radio" name="entrega" value={o} checked={c.entrega === o} onChange={set('entrega')} className="h-4 w-4 accent-[#F15A24]" />{o}
+                    </label>
+                  ))}
+                </fieldset>
+                {envio && <input id="c-loc" value={c.localidad} onChange={set('localidad')} autoComplete="address-level2" placeholder="Localidad y código postal" className="field text-negro" />}
+                <input id="c-nombre" value={c.nombre} onChange={set('nombre')} autoComplete="name" placeholder="Tu nombre (opcional)" className="field text-negro" />
+                <textarea id="c-notas" rows={2} value={c.notas} onChange={set('notas')} placeholder="Algo más que tengamos que saber (opcional)" className="field resize-y text-negro" />
+                <button type="button" onClick={send} className="flex items-center justify-center gap-3 rounded-full bg-[#25D366] px-6 py-4 text-[20px] font-extrabold text-negro transition-transform hover:scale-[1.02]">
+                  <WaIcon />Enviar pedido por WhatsApp
+                </button>
+                {sent && (
+                  <p role="status" className="text-[16px] text-humo">
+                    Abrimos WhatsApp con tu pedido. ¿No se abrió? <a href={sent} target="_blank" rel="noopener" className="font-bold text-naranja underline underline-offset-4">Tocá acá</a>.
+                  </p>
+                )}
+                <p className="flex items-center gap-2 text-[15px] text-humo"><Foot className="h-4 w-4 shrink-0 text-naranja" />Retiro sin cargo en el taller · {site.city}</p>
               </aside>
             </div>
           )}
