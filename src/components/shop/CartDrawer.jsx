@@ -21,13 +21,18 @@ export default function CartDrawer() {
 
   useEffect(() => { cart.close() }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Posición inicial fuera de pantalla con GSAP (no con la clase translate-x-full: GSAP la
+  // absorbe como x en píxeles y el panel nunca llegaba a 0).
+  useGSAP(() => { gsap.set(panel.current, { xPercent: 100, x: 0 }) }, [])
+
   useGSAP(() => {
     const d = reduceMotion() ? 0 : 1
+    gsap.killTweensOf([panel.current, overlay.current])
     if (cart.isOpen) {
       window.__lenis?.stop()
       gsap.set(wrap.current, { visibility: 'visible' })
       gsap.to(overlay.current, { opacity: 1, duration: 0.3 * d })
-      gsap.fromTo(panel.current, { xPercent: 100 }, { xPercent: 0, duration: 0.55 * d, ease: 'power4.out' })
+      gsap.fromTo(panel.current, { xPercent: 100, x: 0 }, { xPercent: 0, x: 0, duration: 0.55 * d, ease: 'power4.out' })
       gsap.from(panel.current.querySelectorAll('[data-line]'), { x: 40, opacity: 0, stagger: 0.05, duration: 0.5 * d, delay: 0.15 * d })
       closeBtn.current?.focus()
     } else {
@@ -50,7 +55,7 @@ export default function CartDrawer() {
   return (
     <div ref={wrap} className={`invisible fixed inset-0 z-[80] ${cart.isOpen ? '' : 'pointer-events-none'}`} aria-hidden={!cart.isOpen}>
       <div ref={overlay} onClick={cart.close} className="absolute inset-0 bg-negro/60 opacity-0 backdrop-blur-[2px]" />
-      <aside ref={panel} role="dialog" aria-modal="true" aria-label="Carrito" className="absolute inset-y-0 right-0 flex w-full max-w-[460px] translate-x-full flex-col bg-blanco shadow-2xl">
+      <aside ref={panel} role="dialog" aria-modal="true" aria-label="Carrito" className="absolute inset-y-0 right-0 flex w-full max-w-[460px] flex-col bg-blanco shadow-2xl">
         <div className="flex items-center justify-between border-b border-linea px-6 py-4">
           <p className="text-[28px] font-black">Tu carrito <span className="text-naranja">{cart.count}</span></p>
           <button ref={closeBtn} type="button" onClick={cart.close} aria-label="Cerrar carrito" className="grid h-11 w-11 place-items-center rounded-full text-[26px] hover:bg-papel">×</button>
